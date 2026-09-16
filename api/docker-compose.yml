@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: my-cyber-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_USER: cyber_user
+      POSTGRES_PASSWORD: cyber_password
+      POSTGRES_DB: my_cyber
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - my_cyber_data:/var/lib/postgresql
+
+volumes:
+  my_cyber_data:
