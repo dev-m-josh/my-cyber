@@ -6,10 +6,16 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
+import { users } from "./users";
+
 export const sales = pgTable("sales", {
   id: uuid("id").defaultRandom().primaryKey(),
 
   customerId: uuid("customer_id"),
+
+  createdBy: uuid("created_by")
+    .notNull()
+    .references(() => users.id),
 
   totalAmount: numeric("total_amount", {
     precision: 10,

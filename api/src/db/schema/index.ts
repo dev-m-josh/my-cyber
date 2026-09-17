@@ -4,3 +4,4 @@ export * from "./services";
 export * from "./sales";
 export * from "./sale_items";
 export * from "./relations";
+export * from "./users";

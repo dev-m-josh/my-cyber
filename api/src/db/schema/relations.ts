@@ -6,6 +6,12 @@ import { sales } from "./sales";
 import { saleItems } from "./sale_items";
 import { products } from "./products";
 import { services } from "./services";
+import { users } from "./users";
+
+// Users → Sales
+export const usersRelations = relations(users, ({ many }) => ({
+  sales: many(sales),
+}));
 
 // Customers → Sales
 export const customersRelations = relations(customers, ({ many }) => ({
@@ -17,6 +23,11 @@ export const salesRelations = relations(sales, ({ one, many }) => ({
   customer: one(customers, {
     fields: [sales.customerId],
     references: [customers.id],
+  }),
+
+  createdBy: one(users, {
+    fields: [sales.createdBy],
+    references: [users.id],
   }),
 
   saleItems: many(saleItems),
