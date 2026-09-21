@@ -3,7 +3,8 @@ import { Request, Response } from "express";
 import { 
     createUser, 
     getUsers,
-    getUserById
+    getUserById,
+    updateUser
  } from "./users.service";
 
 //create a new user
@@ -95,6 +96,65 @@ export const getUserByIdController = async (
 
     return res.status(500).json({
       message: "Failed to get user",
+    });
+  }
+};
+
+//update a user by id
+export const updateUserController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+    } = req.body;
+
+    if (
+      firstName === undefined &&
+      lastName === undefined &&
+      email === undefined &&
+      phone === undefined &&
+      password === undefined
+    ) {
+      return res.status(400).json({
+        message: "At least one field is required",
+      });
+    }
+
+    const user = await updateUser(id, {
+      firstName,
+      lastName,
+      email,
+      phone,
+      password,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "User updated successfully",
+      user,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Failed to update user",
     });
   }
 };

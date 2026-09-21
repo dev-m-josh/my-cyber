@@ -84,3 +84,94 @@ export const getUserById = async (id: string) => {
 
   return user;
 };
+
+//update a user by id
+export const updateUser = async (
+  id: string,
+  data: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    password?: string;
+  },
+) => {
+  if (data.email !== undefined) {
+    const [existingEmail] = await db
+      .select({
+        id: users.id,
+      })
+      .from(users)
+      .where(eq(users.email, data.email))
+      .limit(1);
+
+    if (existingEmail && existingEmail.id !== id) {
+      throw new Error("A user with this email already exists");
+    }
+  }
+
+  if (data.phone !== undefined) {
+    const [existingPhone] = await db
+      .select({
+        id: users.id,
+      })
+      .from(users)
+      .where(eq(users.phone, data.phone))
+      .limit(1);
+
+    if (existingPhone && existingPhone.id !== id) {
+      throw new Error(
+        "A user with this phone number already exists",
+      );
+    }
+  }
+
+  const updateData: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    password?: string;
+    updatedAt: Date;
+  } = {
+    updatedAt: new Date(),
+  };
+
+  if (data.firstName !== undefined) {
+    updateData.firstName = data.firstName;
+  }
+
+  if (data.lastName !== undefined) {
+    updateData.lastName = data.lastName;
+  }
+
+  if (data.email !== undefined) {
+    updateData.email = data.email;
+  }
+
+  if (data.phone !== undefined) {
+    updateData.phone = data.phone;
+  }
+
+  if (data.password !== undefined) {
+    updateData.password = await bcrypt.hash(data.password, 12);
+  }
+
+  const [user] = await db
+    .update(users)
+    .set(updateData)
+    .where(eq(users.id, id))
+    .returning({
+      id: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      phone: users.phone,
+      isAdmin: users.isAdmin,
+      emailVerified: users.emailVerified,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    });
+
+  return user;
+};
