@@ -44,6 +44,7 @@ export const login = async (email: string, password: string) => {
       lastName: user.lastName,
       email: user.email,
       isAdmin: user.isAdmin,
+      isActive: user.isActive,
       emailVerified: user.emailVerified,
     },
   };

@@ -40,6 +40,7 @@ export const createUser = async (
       email: users.email,
       phone: users.phone,
       isAdmin: users.isAdmin,
+      isActive: users.isActive,
       emailVerified: users.emailVerified,
       createdAt: users.createdAt,
     });
@@ -57,6 +58,7 @@ export const getUsers = async () => {
       email: users.email,
       phone: users.phone,
       isAdmin: users.isAdmin,
+      isActive: users.isActive,
       emailVerified: users.emailVerified,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
@@ -74,6 +76,7 @@ export const getUserById = async (id: string) => {
       email: users.email,
       phone: users.phone,
       isAdmin: users.isAdmin,
+      isActive: users.isActive,
       emailVerified: users.emailVerified,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
@@ -168,7 +171,36 @@ export const updateUser = async (
       email: users.email,
       phone: users.phone,
       isAdmin: users.isAdmin,
+      isActive: users.isActive,
       emailVerified: users.emailVerified,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    });
+
+  return user;
+};
+
+//deactivate a user by id
+export const updateUserStatus = async (
+  id: string,
+  isActive: boolean,
+) => {
+  const [user] = await db
+    .update(users)
+    .set({
+      isActive,
+      updatedAt: new Date(),
+    })
+    .where(eq(users.id, id))
+    .returning({
+      id: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      phone: users.phone,
+      isAdmin: users.isAdmin,
+      emailVerified: users.emailVerified,
+      isActive: users.isActive,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
     });

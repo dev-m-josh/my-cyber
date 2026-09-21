@@ -37,6 +37,10 @@ export const users = pgTable("users", {
     .default(false)
     .notNull(),
 
+  isActive: boolean("is_active")
+    .default(true)
+    .notNull(),
+
   createdAt: timestamp("created_at")
     .defaultNow()
     .notNull(),

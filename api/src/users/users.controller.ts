@@ -4,7 +4,8 @@ import {
     createUser, 
     getUsers,
     getUserById,
-    updateUser
+    updateUser,
+    updateUserStatus
  } from "./users.service";
 
 //create a new user
@@ -155,6 +156,44 @@ export const updateUserController = async (
 
     return res.status(500).json({
       message: "Failed to update user",
+    });
+  }
+};
+
+//deactivate a user by id
+export const updateUserStatusController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+    const { isActive } = req.body;
+
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({
+        message: "isActive must be a boolean",
+      });
+    }
+
+    const user = await updateUserStatus(id, isActive);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: isActive
+        ? "User activated successfully"
+        : "User deactivated successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Failed to update user status:", error);
+
+    return res.status(500).json({
+      message: "Failed to update user status",
     });
   }
 };
