@@ -63,3 +63,24 @@ export const getUsers = async () => {
     })
     .from(users);
 };
+
+//get a user by id
+export const getUserById = async (id: string) => {
+  const [user] = await db
+    .select({
+      id: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      phone: users.phone,
+      isAdmin: users.isAdmin,
+      emailVerified: users.emailVerified,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    })
+    .from(users)
+    .where(eq(users.id, id))
+    .limit(1);
+
+  return user;
+};

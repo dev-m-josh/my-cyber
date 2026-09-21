@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 
-import { createUser, getUsers } from "./users.service";
+import { 
+    createUser, 
+    getUsers,
+    getUserById
+ } from "./users.service";
 
 //create a new user
 export const createUserController = async (
@@ -63,6 +67,34 @@ export const getUsersController = async (
 
     return res.status(500).json({
       message: "Failed to get users",
+    });
+  }
+};
+
+//get a user by id
+export const getUserByIdController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const user = await getUserById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.error("Failed to get user:", error);
+
+    return res.status(500).json({
+      message: "Failed to get user",
     });
   }
 };
