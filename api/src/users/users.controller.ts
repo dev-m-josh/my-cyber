@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 
-import { createUser } from "./users.service";
+import { createUser, getUsers } from "./users.service";
 
+//create a new user
 export const createUserController = async (
   req: Request,
   res: Response,
@@ -42,6 +43,26 @@ export const createUserController = async (
 
     return res.status(500).json({
       message: "Something went wrong",
+    });
+  }
+};
+
+//get all users
+export const getUsersController = async (
+  _req: Request,
+  res: Response,
+) => {
+  try {
+    const users = await getUsers();
+
+    return res.status(200).json({
+      users,
+    });
+  } catch (error) {
+    console.error("Failed to get users:", error);
+
+    return res.status(500).json({
+      message: "Failed to get users",
     });
   }
 };

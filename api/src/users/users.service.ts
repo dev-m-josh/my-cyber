@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { users } from "../db/schema";
 
+//create a new user
 export const createUser = async (
   firstName: string,
   lastName: string | undefined,
@@ -44,4 +45,21 @@ export const createUser = async (
     });
 
   return user;
+};
+
+//get all users
+export const getUsers = async () => {
+  return await db
+    .select({
+      id: users.id,
+      firstName: users.firstName,
+      lastName: users.lastName,
+      email: users.email,
+      phone: users.phone,
+      isAdmin: users.isAdmin,
+      emailVerified: users.emailVerified,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    })
+    .from(users);
 };
