@@ -101,17 +101,6 @@ export const updateCustomerController = async (
       email,
     }: UpdateCustomerRequest = req.body;
 
-    if (
-      firstName === undefined &&
-      lastName === undefined &&
-      phone === undefined &&
-      email === undefined
-    ) {
-      return res.status(400).json({
-        message: "At least one field is required",
-      });
-    }
-
     const customer = await updateCustomer(id, {
       firstName,
       lastName,
@@ -119,13 +108,20 @@ export const updateCustomerController = async (
       email,
     });
 
+    if (!customer) {
+      return res.status(404).json({
+        message: "Customer not found",
+      });
+    }
+
     return res.status(200).json({
       message: "Customer updated successfully",
       customer,
     });
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error)
+      console.error("Failed to update customer:", error);
+
       return res.status(400).json({
         message: error.message,
       });
