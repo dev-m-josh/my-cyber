@@ -48,3 +48,15 @@ export const updateServiceStatus = async (
 
   return service;
 };
+
+export const getServiceById = async (
+  id: string,
+): Promise<Service | undefined> => {
+  const [service] = await db
+    .select()
+    .from(services)
+    .where(eq(services.id, id))
+    .limit(1);
+
+  return service;
+};

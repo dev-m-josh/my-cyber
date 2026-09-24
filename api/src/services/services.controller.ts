@@ -3,7 +3,8 @@ import { Request, Response } from "express";
 import { 
     createService,
     getServices,
-    updateServiceStatus
+    updateServiceStatus,
+    getServiceById
  } from "./services.service";
 import { 
     CreateServiceRequest,
@@ -102,6 +103,33 @@ export const updateServiceStatusController = async (
 
     return res.status(500).json({
       message: "Failed to update service status",
+    });
+  }
+};
+
+export const getServiceByIdController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const service = await getServiceById(id);
+
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+
+    return res.status(200).json({
+      service,
+    });
+  } catch (error) {
+    console.error("Failed to get service:", error);
+
+    return res.status(500).json({
+      message: "Failed to get service",
     });
   }
 };
