@@ -4,11 +4,13 @@ import {
     createService,
     getServices,
     updateServiceStatus,
-    getServiceById
+    getServiceById,
+    updateService
  } from "./services.service";
 import { 
     CreateServiceRequest,
-    UpdateServiceStatusRequest
+    UpdateServiceStatusRequest,
+    UpdateServiceRequest
  } from "../utils/types";
 
 export const createServiceController = async (
@@ -130,6 +132,46 @@ export const getServiceByIdController = async (
 
     return res.status(500).json({
       message: "Failed to get service",
+    });
+  }
+};
+
+export const updateServiceController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      name,
+      description,
+      imageUrl,
+      price,
+    }: UpdateServiceRequest = req.body;
+
+    const service = await updateService(id, {
+      name,
+      description,
+      imageUrl,
+      price,
+    });
+
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Service updated successfully",
+      service,
+    });
+  } catch (error) {
+    console.error("Failed to update service:", error);
+
+    return res.status(500).json({
+      message: "Failed to update service",
     });
   }
 };

@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import {
   CreateServiceRequest,
   Service,
+  UpdateServiceRequest
 } from "../utils/types";
 
 //create service
@@ -57,6 +58,26 @@ export const getServiceById = async (
     .from(services)
     .where(eq(services.id, id))
     .limit(1);
+
+  return service;
+};
+
+export const updateService = async (
+  id: string,
+  data: UpdateServiceRequest,
+): Promise<Service | undefined> => {
+  if (Object.keys(data).length === 0) {
+    return getServiceById(id);
+  }
+
+  const [service] = await db
+    .update(services)
+    .set({
+      ...data,
+      updatedAt: new Date(),
+    })
+    .where(eq(services.id, id))
+    .returning();
 
   return service;
 };
