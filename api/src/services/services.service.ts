@@ -32,3 +32,19 @@ export const getServices = async (): Promise<Service[]> => {
     .where(eq(services.isActive, true));
 };
 
+//inactivate a service
+export const updateServiceStatus = async (
+  id: string,
+  isActive: boolean,
+): Promise<Service | undefined> => {
+  const [service] = await db
+    .update(services)
+    .set({
+      isActive,
+      updatedAt: new Date(),
+    })
+    .where(eq(services.id, id))
+    .returning();
+
+  return service;
+};

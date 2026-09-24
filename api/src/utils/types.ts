@@ -47,3 +47,7 @@ export type UpdateServiceRequest = {
   imageUrl?: string;
   price?: string;
 };
+
+export type UpdateServiceStatusRequest = {
+  isActive: boolean;
+};

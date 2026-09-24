@@ -2,9 +2,13 @@ import { Request, Response } from "express";
 
 import { 
     createService,
-    getServices
+    getServices,
+    updateServiceStatus
  } from "./services.service";
-import { CreateServiceRequest } from "../utils/types";
+import { 
+    CreateServiceRequest,
+    UpdateServiceStatusRequest
+ } from "../utils/types";
 
 export const createServiceController = async (
   req: Request,
@@ -61,6 +65,43 @@ export const getServicesController = async (
 
     return res.status(500).json({
       message: "Failed to get services",
+    });
+  }
+};
+
+export const updateServiceStatusController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+    const { isActive }: UpdateServiceStatusRequest = req.body;
+
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({
+        message: "isActive must be a boolean",
+      });
+    }
+
+    const service = await updateServiceStatus(id, isActive);
+
+    if (!service) {
+      return res.status(404).json({
+        message: "Service not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: isActive
+        ? "Service activated successfully"
+        : "Service deactivated successfully",
+      service,
+    });
+  } catch (error) {
+    console.error("Failed to update service status:", error);
+
+    return res.status(500).json({
+      message: "Failed to update service status",
     });
   }
 };
