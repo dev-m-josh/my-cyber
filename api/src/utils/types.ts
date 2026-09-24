@@ -51,3 +51,38 @@ export type UpdateServiceRequest = {
 export type UpdateServiceStatusRequest = {
   isActive: boolean;
 };
+
+export type Product = {
+  id: string;
+  name: string;
+  description: string | null;
+  imageUrl: string | null;
+  sellingPrice: string;
+  costPrice: string;
+  stockQuantity: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CreateProductRequest = {
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  sellingPrice: string;
+  costPrice: string;
+  stockQuantity?: number;
+};
+
+export type UpdateProductRequest = {
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+  sellingPrice?: string;
+  costPrice?: string;
+  stockQuantity?: number;
+};
+
+export type UpdateProductStatusRequest = {
+  isActive: boolean;
+};  
