@@ -1,5 +1,6 @@
 import { db } from "../db";
 import { products } from "../db/schema";
+import { eq } from "drizzle-orm";
 
 import {
   CreateProductRequest,
@@ -22,4 +23,11 @@ export const createProduct = async (
     .returning();
 
   return newProduct;
+};
+
+export const getProducts = async (): Promise<Product[]> => {
+  return await db
+    .select()
+    .from(products)
+    .where(eq(products.isActive, true));
 };

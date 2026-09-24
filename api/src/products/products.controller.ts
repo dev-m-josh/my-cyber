@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 
-import { createProduct } from "./products.service";
-import { CreateProductRequest } from "../utils/types";
+import { 
+    createProduct,
+    getProducts
+} from "./products.service";
+import { 
+    CreateProductRequest
+} from "../utils/types";
 
 export const createProductController = async (
   req: Request,
@@ -27,6 +32,25 @@ export const createProductController = async (
 
     return res.status(500).json({
       message: "Failed to create product",
+    });
+  }
+};
+
+export const getProductsController = async (
+  _req: Request,
+  res: Response,
+) => {
+  try {
+    const products = await getProducts();
+
+    return res.status(200).json({
+      products,
+    });
+  } catch (error) {
+    console.error("Failed to get products:", error);
+
+    return res.status(500).json({
+      message: "Failed to get products",
     });
   }
 };
