@@ -36,6 +36,13 @@
       "when": 1790256998604,
       "tag": "0004_silly_groot",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790276108342,
+      "tag": "0005_equal_thing",
+      "breakpoints": true
     }
   ]
 }

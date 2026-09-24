@@ -17,6 +17,8 @@ export const services = pgTable("services", {
 
   description: text("description"),
 
+  imageUrl: varchar("image_url", { length: 500 }),
+
   price: numeric("price", {
     precision: 10,
     scale: 2,
