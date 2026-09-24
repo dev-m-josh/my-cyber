@@ -1,5 +1,6 @@
 import { db } from "../db";
 import { services } from "../db/schema";
+import { eq } from "drizzle-orm";
 
 import {
   CreateServiceRequest,
@@ -22,3 +23,12 @@ export const createService = async (
 
   return newService;
 };
+
+//get all services
+export const getServices = async (): Promise<Service[]> => {
+  return await db
+    .select()
+    .from(services)
+    .where(eq(services.isActive, true));
+};
+

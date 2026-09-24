@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 
-import { createService } from "./services.service";
+import { 
+    createService,
+    getServices
+ } from "./services.service";
 import { CreateServiceRequest } from "../utils/types";
 
 export const createServiceController = async (
@@ -39,6 +42,25 @@ export const createServiceController = async (
 
     return res.status(500).json({
       message: "Failed to create service",
+    });
+  }
+};
+
+export const getServicesController = async (
+  _req: Request,
+  res: Response,
+) => {
+  try {
+    const services = await getServices();
+
+    return res.status(200).json({
+      services,
+    });
+  } catch (error) {
+    console.error("Failed to get services:", error);
+
+    return res.status(500).json({
+      message: "Failed to get services",
     });
   }
 };
