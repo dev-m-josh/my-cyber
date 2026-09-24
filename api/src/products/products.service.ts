@@ -64,3 +64,19 @@ export const updateProduct = async (
 
   return product;
 };
+
+export const updateProductStatus = async (
+  id: string,
+  isActive: boolean,
+): Promise<Product | undefined> => {
+  const [product] = await db
+    .update(products)
+    .set({
+      isActive,
+      updatedAt: new Date(),
+    })
+    .where(eq(products.id, id))
+    .returning();
+
+  return product;
+};

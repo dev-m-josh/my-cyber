@@ -4,11 +4,13 @@ import {
     createProduct,
     getProducts,
     getProductById,
-    updateProduct
+    updateProduct,
+    updateProductStatus
 } from "./products.service";
 import { 
     CreateProductRequest,
-    UpdateProductRequest
+    UpdateProductRequest,
+    UpdateProductStatusRequest
 } from "../utils/types";
 
 export const createProductController = async (
@@ -113,6 +115,38 @@ export const updateProductController = async (
 
     return res.status(500).json({
       message: "Failed to update product",
+    });
+  }
+};
+
+export const updateProductStatusController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const { isActive }: UpdateProductStatusRequest = req.body;
+
+    if (typeof isActive !== "boolean") {
+      return res.status(400).json({
+        message: "isActive must be a boolean",
+      });
+    }
+
+    const product = await updateProductStatus(id, isActive);
+
+    return res.status(200).json({
+      message: isActive
+        ? "Product activated successfully"
+        : "Product deactivated successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("Failed to update product status:", error);
+
+    return res.status(500).json({
+      message: "Failed to update product status",
     });
   }
 };
