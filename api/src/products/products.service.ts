@@ -5,6 +5,7 @@ import { eq } from "drizzle-orm";
 import {
   CreateProductRequest,
   Product,
+  UpdateProductRequest
 } from "../utils/types";
 
 export const createProduct = async (
@@ -30,4 +31,16 @@ export const getProducts = async (): Promise<Product[]> => {
     .select()
     .from(products)
     .where(eq(products.isActive, true));
+};
+
+export const getProductById = async (
+  id: string,
+): Promise<Product | undefined> => {
+  const [product] = await db
+    .select()
+    .from(products)
+    .where(eq(products.id, id))
+    .limit(1);
+
+  return product;
 };

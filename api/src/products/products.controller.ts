@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 
 import { 
     createProduct,
-    getProducts
+    getProducts,
+    getProductById
 } from "./products.service";
 import { 
     CreateProductRequest
@@ -51,6 +52,27 @@ export const getProductsController = async (
 
     return res.status(500).json({
       message: "Failed to get products",
+    });
+  }
+};
+
+export const getProductByIdController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const product = await getProductById(id);
+
+    return res.status(200).json({
+      product,
+    });
+  } catch (error) {
+    console.error("Failed to get product:", error);
+
+    return res.status(500).json({
+      message: "Failed to get product",
     });
   }
 };
