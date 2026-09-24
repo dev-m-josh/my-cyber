@@ -19,11 +19,11 @@ export const customers = pgTable("customers", {
 
   phone: varchar("phone", {
     length: 30,
-  }),
+  }).unique(),
 
   email: varchar("email", {
     length: 255,
-  }),
+  }).unique(),
 
   emailVerified: boolean("email_verified")
     .default(false)
