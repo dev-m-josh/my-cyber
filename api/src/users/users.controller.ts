@@ -185,8 +185,8 @@ export const updateUserStatusController = async (
 
     return res.status(200).json({
       message: isActive
-        ? "User activated successfully"
-        : "User deactivated successfully",
+        ? "User restored successfully"
+        : "User deleted successfully",
       user,
     });
   } catch (error) {

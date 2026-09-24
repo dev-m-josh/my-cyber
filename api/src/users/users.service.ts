@@ -180,7 +180,7 @@ export const updateUser = async (
   return user;
 };
 
-//deactivate a user by id
+//update user active status
 export const updateUserStatus = async (
   id: string,
   isActive: boolean,

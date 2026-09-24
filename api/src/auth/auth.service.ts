@@ -16,6 +16,10 @@ export const login = async (email: string, password: string) => {
     throw new Error("Invalid email or password");
   }
 
+  if (!user.isActive) {
+    throw new Error("User account is inactive");
+  }
+
   const isPasswordValid = await bcrypt.compare(
     password,
     user.password,
