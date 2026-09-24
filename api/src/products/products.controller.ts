@@ -3,10 +3,12 @@ import { Request, Response } from "express";
 import { 
     createProduct,
     getProducts,
-    getProductById
+    getProductById,
+    updateProduct
 } from "./products.service";
 import { 
-    CreateProductRequest
+    CreateProductRequest,
+    UpdateProductRequest
 } from "../utils/types";
 
 export const createProductController = async (
@@ -73,6 +75,44 @@ export const getProductByIdController = async (
 
     return res.status(500).json({
       message: "Failed to get product",
+    });
+  }
+};
+
+export const updateProductController = async (
+  req: Request<{ id: string }>,
+  res: Response,
+) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      name,
+      description,
+      imageUrl,
+      sellingPrice,
+      costPrice,
+      stockQuantity,
+    }: UpdateProductRequest = req.body;
+
+    const product = await updateProduct(id, {
+      name,
+      description,
+      imageUrl,
+      sellingPrice,
+      costPrice,
+      stockQuantity,
+    });
+
+    return res.status(200).json({
+      message: "Product updated successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("Failed to update product:", error);
+
+    return res.status(500).json({
+      message: "Failed to update product",
     });
   }
 };

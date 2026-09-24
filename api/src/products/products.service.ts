@@ -44,3 +44,23 @@ export const getProductById = async (
 
   return product;
 };
+
+export const updateProduct = async (
+  id: string,
+  data: UpdateProductRequest,
+): Promise<Product | undefined> => {
+  if (Object.keys(data).length === 0) {
+    return getProductById(id);
+  }
+
+  const [product] = await db
+    .update(products)
+    .set({
+      ...data,
+      updatedAt: new Date(),
+    })
+    .where(eq(products.id, id))
+    .returning();
+
+  return product;
+};
