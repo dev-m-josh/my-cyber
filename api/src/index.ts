@@ -5,6 +5,7 @@ import customersRoutes from "./customers/customers.routes";
 import usersRoutes from "./users/users.routes";
 import servicesRoutes from "./services/services.routes";
 import productsRoutes from "./products/products.routes";
+import salesRoutes from "./sales/sales.routes";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/users", usersRoutes);
 app.use("/customers", customersRoutes);
 app.use("/services", servicesRoutes);
 app.use("/products", productsRoutes);
+app.use("/sales", salesRoutes);
 
 const PORT = process.env.PORT || 5000;
 

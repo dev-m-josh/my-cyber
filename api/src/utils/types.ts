@@ -85,4 +85,17 @@ export type UpdateProductRequest = {
 
 export type UpdateProductStatusRequest = {
   isActive: boolean;
-};  
+};
+
+export type CreateSaleItemRequest = {
+  productId?: string;
+  serviceId?: string;
+  quantity: number;
+};
+
+export type CreateSaleRequest = {
+  customerId?: string;
+  createdBy: string;
+  paymentMethod: string;
+  items: CreateSaleItemRequest[];
+};
