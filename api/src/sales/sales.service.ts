@@ -161,3 +161,25 @@ export const createSale = async (data: CreateSaleRequest) => {
     };
   });
 };
+
+export const getSaleById = async (id: string) => {
+  const [sale] = await db
+    .select()
+    .from(sales)
+    .where(eq(sales.id, id))
+    .limit(1);
+
+  if (!sale) {
+    return undefined;
+  }
+
+  const items = await db
+    .select()
+    .from(saleItems)
+    .where(eq(saleItems.saleId, id));
+
+  return {
+    sale,
+    items,
+  };
+};
