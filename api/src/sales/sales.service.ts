@@ -76,14 +76,6 @@ export const createSale = async (data: CreateSaleRequest) => {
           unitPrice: product.sellingPrice,
         });
 
-        // Reduce the product stock.
-        await tx
-          .update(products)
-          .set({
-            stockQuantity: product.stockQuantity - item.quantity,
-            updatedAt: new Date(),
-          })
-          .where(eq(products.id, product.id));
       }
 
       // SERVICE SALE
@@ -182,4 +174,84 @@ export const getSaleById = async (id: string) => {
     sale,
     items,
   };
+};
+
+export const getSales = async () => {
+  return await db
+    .select()
+    .from(sales);
+};
+
+export const completeSale = async (id: string) => {
+  return await db.transaction(async (tx) => {
+    // Get the sale.
+    const [sale] = await tx
+      .select()
+      .from(sales)
+      .where(eq(sales.id, id))
+      .limit(1);
+
+    // Sale must exist.
+    if (!sale) {
+      throw new Error("Sale not found");
+    }
+
+    // Only not-completed sales can be completed.
+    if (sale.status === "completed") {
+      throw new Error("Sale is already completed");
+    }
+
+    // Get all items belonging to this sale.
+    const items = await tx
+      .select()
+      .from(saleItems)
+      .where(eq(saleItems.saleId, id));
+
+    // A sale must have at least one item.
+    if (items.length === 0) {
+      throw new Error("A sale must have at least one item");
+    }
+
+    // Check stock and deduct it for product items.
+    for (const item of items) {
+      if (item.productId) {
+        const [product] = await tx
+          .select()
+          .from(products)
+          .where(eq(products.id, item.productId))
+          .limit(1);
+
+        if (!product) {
+          throw new Error("Product not found");
+        }
+
+        if (product.stockQuantity < item.quantity) {
+          throw new Error(`Not enough stock for ${product.name}`);
+        }
+
+        await tx
+          .update(products)
+          .set({
+            stockQuantity: product.stockQuantity - item.quantity,
+            updatedAt: new Date(),
+          })
+          .where(eq(products.id, product.id));
+      }
+    }
+
+    // Mark the sale as completed.
+    const [completedSale] = await tx
+      .update(sales)
+      .set({
+        status: "completed",
+        updatedAt: new Date(),
+      })
+      .where(eq(sales.id, id))
+      .returning();
+
+    return {
+      sale: completedSale,
+      items,
+    };
+  });
 };

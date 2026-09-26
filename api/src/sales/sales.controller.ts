@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 
 import { 
     createSale,
-    getSaleById
+    getSaleById,
+    getSales,
+    completeSale
  } from "./sales.service";
 
 export const createSaleController = async (
@@ -45,6 +47,46 @@ export const getSaleByIdController = async (
         error instanceof Error
           ? error.message
           : "Failed to get sale",
+    });
+  }
+};
+
+export const getSalesController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const sales = await getSales();
+
+    return res.status(200).json({
+      sales,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to get sales",
+    });
+  }
+};
+
+export const completeSaleController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const id = req.params.id as string;
+
+    const sale = await completeSale(id);
+
+    return res.status(200).json(sale);
+  } catch (error) {
+    return res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to complete sale",
     });
   }
 };

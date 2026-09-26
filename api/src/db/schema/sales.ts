@@ -28,7 +28,7 @@ export const sales = pgTable("sales", {
 
   status: varchar("status", {
     length: 30,
-  }).default("completed").notNull(),
+  }).default("not_completed").notNull(),
 
   createdAt: timestamp("created_at")
     .defaultNow()

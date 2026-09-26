@@ -1,0 +1,1 @@
+ALTER TABLE "sales" ALTER COLUMN "status" SET DEFAULT 'not_completed';

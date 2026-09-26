@@ -43,6 +43,13 @@
       "when": 1790276108342,
       "tag": "0005_equal_thing",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790343711131,
+      "tag": "0006_nebulous_hardball",
+      "breakpoints": true
     }
   ]
 }
